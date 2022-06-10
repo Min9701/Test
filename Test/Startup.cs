@@ -34,12 +34,12 @@ namespace Test
             services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddNotyf(Config => { Config.DurationInSeconds = 10; Config.IsDismissable = true; Config.Position = NotyfPosition.BottomRight; });
+            services.AddNotyf(Config => { Config.DurationInSeconds = 3; Config.IsDismissable = true; Config.Position = NotyfPosition.BottomRight; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
+        { 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
