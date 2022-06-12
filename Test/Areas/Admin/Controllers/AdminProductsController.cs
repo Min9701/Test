@@ -5,28 +5,37 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PagedList.Core;
 using Test.Models;
 
 namespace Test.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ProductsController : Controller
+    public class AdminProductsController : Controller
     {
         private readonly BookStoreContext _context;
 
-        public ProductsController(BookStoreContext context)
+        public AdminProductsController(BookStoreContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/Products
-        public async Task<IActionResult> Index()
+        // GET: Admin/AdminProducts
+        public IActionResult Index(int? page)
         {
-            var bookStoreContext = _context.Products.Include(p => p.Cat);
-            return View(await bookStoreContext.ToListAsync());
+            var pageNumber = page == null || page <= 0 ? 1 : page.Value;
+            var pageSize = 20;
+            var lsProducts = _context.Products
+                 .AsNoTracking()
+                 .OrderByDescending(x => x.ProductId)
+                 .Include(x => x.Cat);
+            PagedList<Product> models = new PagedList<Product>(lsProducts, pageNumber, pageSize);
+            ViewBag.CurrentPage = pageNumber;
+            return View(models);
         }
 
-        // GET: Admin/Products/Details/5
+
+        // GET: Admin/AdminProducts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,14 +54,14 @@ namespace Test.Areas.Admin.Controllers
             return View(product);
         }
 
-        // GET: Admin/Products/Create
+        // GET: Admin/AdminProducts/Create
         public IActionResult Create()
         {
             ViewData["CatId"] = new SelectList(_context.Categories, "CatId", "CatId");
             return View();
         }
 
-        // POST: Admin/Products/Create
+        // POST: Admin/AdminProducts/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -69,7 +78,7 @@ namespace Test.Areas.Admin.Controllers
             return View(product);
         }
 
-        // GET: Admin/Products/Edit/5
+        // GET: Admin/AdminProducts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,7 +95,7 @@ namespace Test.Areas.Admin.Controllers
             return View(product);
         }
 
-        // POST: Admin/Products/Edit/5
+        // POST: Admin/AdminProducts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -122,7 +131,7 @@ namespace Test.Areas.Admin.Controllers
             return View(product);
         }
 
-        // GET: Admin/Products/Delete/5
+        // GET: Admin/AdminProducts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -141,7 +150,7 @@ namespace Test.Areas.Admin.Controllers
             return View(product);
         }
 
-        // POST: Admin/Products/Delete/5
+        // POST: Admin/AdminProducts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

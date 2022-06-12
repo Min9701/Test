@@ -37,7 +37,7 @@ namespace Test.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=LAPTOP-GJP0K78K;Database=BookStore;Integrated Security=true;");
+                optionsBuilder.UseSqlServer("Server=LAPTOP-GJP0K78K;Database=BookStore;Trusted_Connection=True;");
             }
         }
 
@@ -183,6 +183,11 @@ namespace Test.Models
                 entity.Property(e => e.Salt)
                     .HasMaxLength(8)
                     .IsFixedLength(true);
+
+                entity.HasOne(d => d.Location)
+                    .WithMany(p => p.Customers)
+                    .HasForeignKey(d => d.LocationId)
+                    .HasConstraintName("FK_CUSTOMER_LOCATION");
             });
 
             modelBuilder.Entity<Location>(entity =>

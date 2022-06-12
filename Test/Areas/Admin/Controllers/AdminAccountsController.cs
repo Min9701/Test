@@ -22,6 +22,13 @@ namespace Test.Areas.Admin.Controllers
         // GET: Admin/AdminAccounts
         public async Task<IActionResult> Index()
         {
+            ViewData["AccessRight"] = new SelectList(_context.Roles, "RoleId", "RoleName");
+
+            List<SelectListItem>LsStatus = new List<SelectListItem>();
+            LsStatus.Add(new SelectListItem() { Text = "Active", Value = "1" });
+            LsStatus.Add(new SelectListItem() { Text = "Block", Value = "0" });
+            ViewData["lsStatus"] = LsStatus;
+
             var bookStoreContext = _context.Accounts.Include(a => a.Roles);
             return View(await bookStoreContext.ToListAsync());
         }
