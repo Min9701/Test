@@ -221,25 +221,13 @@ namespace Test.Models
 
                 entity.Property(e => e.AccountId).HasColumnName("AccountID");
 
-                entity.Property(e => e.Alias).HasMaxLength(250);
-
                 entity.Property(e => e.Author).HasMaxLength(250);
-
-                entity.Property(e => e.CatId).HasColumnName("CatID");
 
                 entity.Property(e => e.CreateDate).HasColumnType("datetime");
 
                 entity.Property(e => e.IsHot).HasColumnName("isHot");
 
                 entity.Property(e => e.IsNewFeed).HasColumnName("isNewFeed");
-
-                entity.Property(e => e.MetaDesc).HasMaxLength(250);
-
-                entity.Property(e => e.MetaKey).HasMaxLength(250);
-
-                entity.Property(e => e.Scontents).HasMaxLength(250);
-
-                entity.Property(e => e.Thumb).HasMaxLength(250);
 
                 entity.Property(e => e.Title).HasMaxLength(250);
             });
