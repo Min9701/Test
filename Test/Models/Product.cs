@@ -17,7 +17,7 @@ namespace Test.Models
         public string ShortDesc { get; set; }
         public string Description { get; set; }
         public int? CatId { get; set; }
-        public int? Price { get; set; }
+        public double? Price { get; set; }
         public int? Discount { get; set; }
         public string Thumb { get; set; }
         public string Video { get; set; }

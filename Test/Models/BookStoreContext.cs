@@ -300,20 +300,12 @@ namespace Test.Models
                 entity.ToTable("PAGE");
 
                 entity.Property(e => e.PageId)
-                    .HasMaxLength(250)
+                    .ValueGeneratedNever()
                     .HasColumnName("PageID");
-
-                entity.Property(e => e.Alias).HasMaxLength(250);
 
                 entity.Property(e => e.CreateAt).HasColumnType("datetime");
 
-                entity.Property(e => e.MetaDesc).HasMaxLength(250);
-
-                entity.Property(e => e.MetaKey).HasMaxLength(250);
-
-                entity.Property(e => e.Thumb).HasMaxLength(250);
-
-                entity.Property(e => e.Title).HasMaxLength(250);
+                entity.Property(e => e.PageName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Product>(entity =>

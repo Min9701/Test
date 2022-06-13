@@ -11,30 +11,29 @@ using Test.Models;
 namespace Test.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class AdminCustomersController : Controller
+    public class AdminPagesController : Controller
     {
         private readonly BookStoreContext _context;
 
-        public AdminCustomersController(BookStoreContext context)
+        public AdminPagesController(BookStoreContext context)
         {
             _context = context;
         }
 
-        // GET: Admin/AdminCustomers
+        // GET: Admin/AdminPages
         public IActionResult Index(int? page)
         {
             var pageNumber = page == null || page <= 0 ? 1 : page.Value;
             var pageSize = 20;
-            var lsCustomers = _context.Customers
+            var lsPages = _context.Pages
                  .AsNoTracking()
-                 .OrderByDescending(x => x.CreateDate)
-                 .Include(x => x.Location);
-            PagedList<Customer> models = new PagedList<Customer>(lsCustomers, pageNumber, pageSize);
+                 .OrderByDescending(x => x.PageId);
+            PagedList<Page> models = new PagedList<Page>(lsPages.AsQueryable(), pageNumber, pageSize);
             ViewBag.CurrentPage = pageNumber;
             return View(models);
         }
 
-        // GET: Admin/AdminCustomers/Details/5
+        // GET: Admin/AdminPages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -42,39 +41,39 @@ namespace Test.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
+            var page = await _context.Pages
+                .FirstOrDefaultAsync(m => m.PageId == id);
+            if (page == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(page);
         }
 
-        // GET: Admin/AdminCustomers/Create
+        // GET: Admin/AdminPages/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/AdminCustomers/Create
+        // POST: Admin/AdminPages/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CustomerId,FullName,Birthday,Avatar,Address,Email,Phone,LocationId,District,Ward,Password,CreateDate,Salt,LastLogin,Active")] Customer customer)
+        public async Task<IActionResult> Create([Bind("PageId,Contents,Thumb,Published,Title,MetaDesc,MetaKey,Alias,CreateAt,Ordering")] Page page)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer);
+                _context.Add(page);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(page);
         }
 
-        // GET: Admin/AdminCustomers/Edit/5
+        // GET: Admin/AdminPages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -82,22 +81,22 @@ namespace Test.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            var page = await _context.Pages.FindAsync(id);
+            if (page == null)
             {
                 return NotFound();
             }
-            return View(customer);
+            return View(page);
         }
 
-        // POST: Admin/AdminCustomers/Edit/5
+        // POST: Admin/AdminPages/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerId,FullName,Birthday,Avatar,Address,Email,Phone,LocationId,District,Ward,Password,CreateDate,Salt,LastLogin,Active")] Customer customer)
+        public async Task<IActionResult> Edit(int? id, [Bind("PageId,Contents,Thumb,Published,Title,MetaDesc,MetaKey,Alias,CreateAt,Ordering")] Page page)
         {
-            if (id != customer.CustomerId)
+            if (id != page.PageId)
             {
                 return NotFound();
             }
@@ -106,12 +105,12 @@ namespace Test.Areas.Admin.Controllers
             {
                 try
                 {
-                    _context.Update(customer);
+                    _context.Update(page);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!CustomerExists(customer.CustomerId))
+                    if (!PageExists(page.PageId))
                     {
                         return NotFound();
                     }
@@ -122,10 +121,10 @@ namespace Test.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(customer);
+            return View(page);
         }
 
-        // GET: Admin/AdminCustomers/Delete/5
+        // GET: Admin/AdminPages/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,30 +132,30 @@ namespace Test.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerId == id);
-            if (customer == null)
+            var page = await _context.Pages
+                .FirstOrDefaultAsync(m => m.PageId == id);
+            if (page == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
+            return View(page);
         }
 
-        // POST: Admin/AdminCustomers/Delete/5
+        // POST: Admin/AdminPages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customer);
+            var page = await _context.Pages.FindAsync(id);
+            _context.Pages.Remove(page);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool CustomerExists(int id)
+        private bool PageExists(int id)
         {
-            return _context.Customers.Any(e => e.CustomerId == id);
+            return _context.Pages.Any(e => e.PageId == id);
         }
     }
 }
