@@ -21,7 +21,7 @@ namespace Test.Areas.Admin.Controllers
         }
 
         // GET: Admin/AdminProducts
-        public IActionResult Index(int page = 1,int CatID = 0)
+        public IActionResult Index(int page = 1, int CatID = 0)
         {
             var pageNumber = page;
             var pageSize = 20;
@@ -31,11 +31,11 @@ namespace Test.Areas.Admin.Controllers
 
             if (CatID != 0)
             {
-                  lsProducts = _context.Products
-                 .AsNoTracking()
-                 .Where(x=>x.CatId == CatID)
-                 .Include(x => x.Cat)
-                 .OrderByDescending(x => x.ProductId).ToList();
+                lsProducts = _context.Products
+               .AsNoTracking()
+               .Where(x => x.CatId == CatID)
+               .Include(x => x.Cat)
+               .OrderByDescending(x => x.ProductId).ToList();
             }
             else
             {
@@ -44,7 +44,7 @@ namespace Test.Areas.Admin.Controllers
                 .Include(x => x.Cat)
                 .OrderByDescending(x => x.ProductId).ToList();
             }
-            
+
             PagedList<Product> models = new PagedList<Product>(lsProducts.AsQueryable(), pageNumber, pageSize);
             ViewBag.CurrentCateID = CatID;
             ViewBag.CurrentPage = pageNumber;
